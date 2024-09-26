@@ -14,10 +14,6 @@
     border-radius: 4px;
 }
 
-#grid-container div.box:hover {
-    background-color: blue;
-}
-
 #resize-btn {
     display: block;
     margin: 8px auto;
