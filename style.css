@@ -4,12 +4,29 @@
     height: 960px;
     display: flex;
     justify-content: space-between;
-    gap: 8px;
+    gap: 2px;
     flex-wrap: wrap;
 }
 
 #grid-container div.box {
     box-sizing: border-box;
     border: 2px solid blue;
+    border-radius: 4px;
+}
+
+#grid-container div.box:hover {
+    background-color: blue;
+}
+
+#resize-btn {
+    display: block;
+    margin: 8px auto;
+    font-size: 16px;
+    padding: 8px 24px;
+    background-color: lightblue;
     border-radius: 8px;
+}
+
+#resize-btn:hover {
+    cursor: pointer;
 }
