@@ -1,0 +1,15 @@
+#grid-container {
+    margin: auto;
+    width: 960px;
+    height: 960px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#grid-container div.box {
+    box-sizing: border-box;
+    border: 2px solid blue;
+    border-radius: 8px;
+}
