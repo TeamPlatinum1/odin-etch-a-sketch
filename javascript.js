@@ -35,6 +35,8 @@ resizeBtn.addEventListener('click', () => {
 });
 
 brushTypeBtns.addEventListener("click", (event) => {
+    if(event.target.id == brushTypeBtns.id)
+        return;
     unToggleButton(document.getElementById(currentBrushType));
     toggleButton(event.target);
     currentBrushType = event.target.id;
@@ -112,7 +114,7 @@ function handlePixelHover(event){
             event.target.style.backgroundColor = "black";
             break;
         case brushTypes.OPACITY:
-            event.target.style.backgroundColor = "black";
+            event.target.style.backgroundColor = `rgba(0, 0, 0, ${shadowOneStep(event.target)})`;
             break;
         case brushTypes.RANDOM:
             event.target.style.backgroundColor = getRandomColor();
@@ -122,6 +124,14 @@ function handlePixelHover(event){
             break;
                         
     }
+}
+
+function shadowOneStep(element){
+    if(element.style.backgroundColor === "rgb(0, 0, 0)" || element.style.backgroundColor === "black")
+        return;
+    if(element.style.backgroundColor.slice(0, 4) !== "rgba")
+        return 0.1;
+    return Math.min(+element.style.backgroundColor.slice(-4, -1) + 0.1, 1.0);
 }
 
 function getRandomColor(){
