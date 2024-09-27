@@ -1,15 +1,30 @@
+const body = document.querySelector("body");
 const gridContainer = document.querySelector("#grid-container");
 const resizeBtn = document.querySelector("#resize-btn");
-const body = document.querySelector("body");
+const brushTypeBtns = document.querySelector("#brush-types");
+const clearBtn = document.querySelector("#clear-btn");
+const gridLineToggleBtn = document.querySelector("#grid-line-btn");
 
 const maxWidth = +window.getComputedStyle(gridContainer).width.slice(0, -2);
 const maxHeight = +window.getComputedStyle(gridContainer).height.slice(0, -2);
-const gapSize = +window.getComputedStyle(gridContainer).gap.slice(0, -2);
 
+const maxPixels = 100;
+
+const brushTypes = {
+    BLACK: "black",
+    OPACITY: "shadow",
+    RANDOM: "rainbow",
+    ERASE: "eraser"
+};
+
+let gridLinesOn = true;
+let currentBrushType = brushTypes.BLACK;
+toggleButton(document.getElementById(currentBrushType));
 generateGrid(16, 16);
 
+gridContainer.addEventListener("mouseover", handlePixelHover);
+
 resizeBtn.addEventListener('click', () => {
-    
     let userInput;
     do {
         userInput = getUserInput();
@@ -19,15 +34,42 @@ resizeBtn.addEventListener('click', () => {
     generateGrid(userInput, userInput);
 });
 
+brushTypeBtns.addEventListener("click", (event) => {
+    unToggleButton(document.getElementById(currentBrushType));
+    toggleButton(event.target);
+    currentBrushType = event.target.id;
+});
+
+clearBtn.addEventListener("click", () => {
+    document.querySelectorAll(".box").forEach(element => {
+        element.style.backgroundColor = body.style.backgroundColor;
+    });
+});
+
+gridLineToggleBtn.addEventListener("click", () => {
+    let newBorderValue = gridLinesOn ? "0" : "1px solid black";
+    document.querySelectorAll(".box").forEach(element => {
+        element.style.border = newBorderValue;
+    });
+    gridLinesOn = !gridLinesOn;
+});
+
+function toggleButton(btn){
+    btn.style.backgroundColor = "blue";
+}
+
+function unToggleButton(btn){
+    btn.style.backgroundColor = "lightblue";
+}
 
 function getUserInput(){
     return +prompt("Enter new grid size!");
 }
 
 function userInputIsValid(userInput){
-    if(userInput > 0 && userInput <= 70)
+    if(userInput > 0 && userInput <= maxPixels)
         return true;
-    alert("Input a number between 1 and 70!");
+    alert(`Input a number between 1 and ${maxPixels}!`);
     return false;
 }
 
@@ -47,8 +89,8 @@ function generateGrid(width, height){
 }
 
 function calculateSizeOfElements(width, height){
-    let xSize = ((maxWidth-((width-1)*gapSize))/width);
-    let ySize = ((maxHeight-((height-1)*gapSize))/height);
+    let xSize = (maxWidth/width);
+    let ySize = (maxHeight/height);
     return [xSize, ySize];
 }
 
@@ -57,17 +99,29 @@ function generateGridElement(elementXSize, elementYSize){
     element.classList.add("box");
     element.style.width = elementXSize + "px";
     element.style.height = elementYSize + "px";
-    element.addEventListener("mouseover", setRandomColorToElement);
-    element.addEventListener("mouseout", restoreBackgroundColor)
+    element.style.border = gridLinesOn ? "1px solid black" : "0";
     return element;
 }
 
-function setRandomColorToElement(event){
-    event.target.style.backgroundColor = getRandomColor();
-}
+function handlePixelHover(event){
+    if(event.target.id == gridContainer.id)
+        return;
 
-function restoreBackgroundColor(event){
-    event.target.style.backgroundColor = body.style.backgroundColor;
+    switch(currentBrushType){
+        case brushTypes.BLACK:
+            event.target.style.backgroundColor = "black";
+            break;
+        case brushTypes.OPACITY:
+            event.target.style.backgroundColor = "black";
+            break;
+        case brushTypes.RANDOM:
+            event.target.style.backgroundColor = getRandomColor();
+            break;
+        case brushTypes.ERASE:
+            event.target.style.backgroundColor = gridContainer.style.backgroundColor;
+            break;
+                        
+    }
 }
 
 function getRandomColor(){
